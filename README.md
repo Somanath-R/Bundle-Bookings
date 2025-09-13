@@ -20,6 +20,3 @@ Perfect for showcasing bundle offers in eCommerce, such as socks, shoes, or appa
 
 > 🔗 **Coming Soon** — Deploy using GitHub Pages, Netlify, or Vercel  
 > 👉 For now, open the file manually in your browser: https://dazzling-twilight-84b56a.netlify.app/
-
-```bash
-index.html
