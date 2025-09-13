@@ -2,9 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bundle & Save</title>
   <style>
+    /*
+     * Hey, welcome to the style sheet!
+     * We've got a bunch of stuff here to make the bundle widget look great.
+     * I've set up some custom properties (the CSS variables) at the top.
+     * It's just a slick way to manage colors and avoid repeating yourself.
+     */
+
     * {
       margin: 0;
       padding: 0;
@@ -21,6 +28,18 @@
       min-height: 100vh;
     }
 
+    /* Here are the variables. Easy to change later if the branding shifts. */
+    :root {
+      --color-primary: #009879;
+      --color-accent: #ffe066;
+      --color-bg-light: #e6f9f5;
+      --color-text-dark: #333;
+      --color-text-light: #fff;
+      --color-border-default: #ccc;
+      --color-border-active: #009879;
+    }
+
+    /* The main card container. Keeps everything nicely centered. */
     .bundle-container {
       width: 100%;
       max-width: 480px;
@@ -28,126 +47,153 @@
 
     h2 {
       text-align: center;
-      color: #009879;
+      color: var(--color-primary);
       font-size: 24px;
       margin-bottom: 25px;
     }
 
+    /* Each bundle option is a card. We give it a nice border and shadow. */
     .bundle-option {
-      background: #fff;
-      border: 2px solid #ccc;
+      background: var(--color-text-light);
+      border: 2px solid var(--color-border-default);
       border-radius: 8px;
       margin-bottom: 20px;
       overflow: hidden;
       cursor: pointer;
-      transition: border-color 0.3s ease;
+      transition: border-color 0.3s ease, background-color 0.3s ease;
     }
 
+    /* When a user selects or hovers over a card, it gets this 'active' class. */
     .bundle-option.active {
-      border-color: #009879;
-      background-color: #e6f9f5;
+      border-color: var(--color-border-active);
+      background-color: var(--color-bg-light);
     }
 
+    /* The header area of each card. We use flexbox for easy alignment. */
     .bundle-header {
       padding: 20px;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       gap: 15px;
+      position: relative;
     }
 
     .bundle-header input[type="radio"] {
-      margin-top: 5px;
       cursor: pointer;
+      margin-top: 2px;
     }
 
+    /* The text section inside the header. */
     .bundle-details {
       flex-grow: 1;
     }
-
+    
     .bundle-details strong {
       display: block;
       font-size: 17px;
       margin-bottom: 4px;
     }
 
+    /* The 'Most Popular' badge. We use absolute positioning to place it. */
     .badge {
-      color: #009879;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--color-accent);
+      color: var(--color-text-dark);
       font-size: 13px;
       font-weight: bold;
-      margin-top: 5px;
-      border-radius: 0;
+      padding: 4px 12px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     }
 
+    /* This is the cool expanding section. */
     .bundle-expand {
       max-height: 0;
       opacity: 0;
       overflow: hidden;
-      transition: 
-        max-height 0.5s ease,
-        opacity 0.3s ease;
       padding: 0 20px;
+      /*
+       * The transition is key here. It makes the expand/collapse animation
+       * feel smooth and polished.
+       */
+      transition: max-height 0.5s ease, opacity 0.3s ease;
     }
 
+    /* When the card is active, we expand the content. */
     .bundle-option.active .bundle-expand {
-      max-height: 500px;
+      max-height: 500px; /* Big enough to fit everything and still look good */
       opacity: 1;
       padding-bottom: 20px;
     }
 
-    select {
-      width: 90%;
-      padding: 6px 10px;
-      border: 1.5px solid #009879;
-      border-radius: 6px;
-      background: #f9f9f9;
-      font-size: 14px;
-      transition: border-color 0.2s;
-      outline: none;
-      margin-bottom: 4px;
-    }
-    select:focus {
-      border-color: #005f56;
-      background: #fff;
-    }
+    /* Layout for the size/color selectors. */
     .pair-selection {
       display: flex;
       flex-direction: column;
       gap: 16px;
     }
+
     .pair {
       display: flex;
       align-items: center;
-      width: 100%;
+      gap: 10px;
     }
+
     .pair > span {
-      min-width: 32px;
+      min-width: 25px;
       text-align: center;
     }
-    .pair > div {
+    
+    .pair__field {
       flex: 1;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
     }
+
+    .pair__field label {
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+    
+    select {
+      width: 100%;
+      padding: 6px 10px;
+      border: 1.5px solid var(--color-border-active);
+      border-radius: 6px;
+      background: #f9f9f9;
+      font-size: 14px;
+      outline: none;
+      transition: background-color 0.2s;
+    }
+
+    select:focus {
+      background: var(--color-text-light);
+    }
+
+    /* The footer stuff. */
     .shipping {
       color: green;
       font-size: 14px;
-      margin-bottom: 5px;
+      margin-top: 15px;
+      text-align: center;
     }
 
     .total {
       font-size: 16px;
       font-weight: bold;
       text-align: right;
-      margin-bottom: 15px;
+      margin: 10px 0 15px;
     }
 
     .add-to-cart {
       display: block;
       width: 100%;
       padding: 15px;
-      background-color: #009879;
-      color: white;
+      background-color: var(--color-primary);
+      color: var(--color-text-light);
       font-size: 16px;
       border: none;
       border-radius: 0;
@@ -167,35 +213,71 @@
   <div class="bundle-container">
     <h2>Bundle & Save</h2>
 
-    <!-- 1 Pair -->
-    <div class="bundle-option active">
+    <div class="bundle-option active" data-price="195">
       <div class="bundle-header">
         <input type="radio" name="bundle" checked>
         <div class="bundle-details">
           <strong>1 Pair</strong>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
             <span style="font-weight:bold; font-size:15px;">DKK 195.00</span>
-            <span style="color:#009879; font-size:15px; font-weight:bold;">50% OFF</span>
+            <span style="color:var(--color-primary); font-size:15px; font-weight:bold;">50% OFF</span>
           </div>
         </div>
       </div>
       <div class="bundle-expand">
         <div class="pair-selection">
-          <!-- Example for one pair -->
           <div class="pair">
             <span>#1</span>
-            <div>
-              <label style="font-size:12px; margin-bottom:2px;">Size</label>
+            <div class="pair__field">
+              <label>Size</label>
               <select>
                 <option>S</option>
                 <option>M</option>
                 <option>L</option>
               </select>
             </div>
-            <div>
-              <label style="font-size:13px; margin-bottom:2px;">Color</label>
+            <div class="pair__field">
+              <label>Color</label>
               <select>
-                <option selected>Red</option>
+                <option>Red</option>
+                <option>Blue</option>
+                <option>Green</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bundle-option" data-price="345">
+      <div class="bundle-header">
+        <input type="radio" name="bundle">
+        <span class="badge">Most Popular</span>
+        <div class="bundle-details">
+          <strong>2 Pair</strong>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-weight:bold; font-size:15px; color:var(--color-primary);">DKK 345.00</span>
+            <span style="font-size:15px; color:#999; text-decoration:line-through;">DKK 575.00</span>
+            <span style="color:var(--color-primary); font-size:15px; font-weight:bold;">40% OFF</span>
+          </div>
+        </div>
+      </div>
+      <div class="bundle-expand">
+        <div class="pair-selection">
+          <div class="pair">
+            <span>#1</span>
+            <div class="pair__field">
+              <label>Size</label>
+              <select>
+                <option>S</option>
+                <option>M</option>
+                <option>L</option>
+              </select>
+            </div>
+            <div class="pair__field">
+              <label>Color</label>
+              <select>
+                <option>Red</option>
                 <option>Blue</option>
                 <option>Green</option>
               </select>
@@ -203,16 +285,18 @@
           </div>
           <div class="pair">
             <span>#2</span>
-            <div>
+            <div class="pair__field">
+              <label>Size</label>
               <select>
                 <option>S</option>
                 <option>M</option>
                 <option>L</option>
               </select>
             </div>
-            <div>
+            <div class="pair__field">
+              <label>Color</label>
               <select>
-                <option selected>Red</option>
+                <option>Red</option>
                 <option>Blue</option>
                 <option>Green</option>
               </select>
@@ -222,80 +306,14 @@
       </div>
     </div>
 
-    <!-- 2 Pair -->
-    <div class="bundle-option">
-      <div class="bundle-header" style="position:relative;">
-        <input type="radio" name="bundle">
-        <span class="badge" style="
-          position:absolute;
-          top:10px;
-          right:10px;
-          background:#ffe066;
-          color:#333;
-          font-weight:bold;
-          padding:4px 12px;
-          border-radius:6px;
-          z-index:2;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        ">Most Popular</span>
-        <div class="bundle-details">
-          <strong>2 Pair</strong>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
-            <span style="font-weight:bold; font-size:15px; color:#009879;">DKK 345.00</span>
-            <span style="font-size:15px; color:#999; text-decoration:line-through;">DKK 575.00</span>
-            <span style="color:#009879; font-size:15px; font-weight:bold;">40% OFF</span>
-          </div>
-        </div>
-      </div>
-      <div class="bundle-expand">
-        <div class="pair-selection" style="display:flex; flex-direction:column; gap:16px;">
-          <div class="pair" style="display:flex; align-items:center; gap:0; width:100%;">
-            <span style="min-width:32px; text-align:center;">#1</span>
-            <div style="flex:1; display:flex; flex-direction:column; align-items:center;">
-              <label style="font-size:13px; margin-bottom:2px;">Size</label>
-              <select style="width:80%;">
-                <option>S</option>
-                <option>M</option>
-                <option>L</option>
-              </select>
-            </div>
-            <div style="flex:1; display:flex; flex-direction:column; align-items:center;">
-              <label style="font-size:13px; margin-bottom:2px;">Color</label>
-              <select style="width:80%;">
-                <option>Colour</option>
-              </select>
-            </div>
-          </div>
-          <div class="pair" style="display:flex; align-items:center; gap:0; width:100%;">
-            <span style="min-width:32px; text-align:center;">#2</span>
-            <div style="flex:1; display:flex; flex-direction:column; align-items:center;">
-            
-              <select style="width:80%;">
-                <option>S</option>
-                <option>M</option>
-                <option>L</option>
-              </select>
-            </div>
-            <div style="flex:1; display:flex; flex-direction:column; align-items:center;">
-             
-              <select style="width:80%;">
-                <option>Colour</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 3 Pair -->
-    <div class="bundle-option">
+    <div class="bundle-option" data-price="528">
       <div class="bundle-header">
         <input type="radio" name="bundle">
         <div class="bundle-details">
           <strong>3 Pair</strong>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
             <span style="font-weight:bold; font-size:15px;">DKK 528.00</span>
-            <span style="color:#009879; font-size:15px; font-weight:bold;">60% OFF</span>
+            <span style="color:var(--color-primary); font-size:15px; font-weight:bold;">60% OFF</span>
           </div>
         </div>
       </div>
@@ -303,18 +321,18 @@
         <div class="pair-selection">
           <div class="pair">
             <span>#1</span>
-            <div>
-              <label style="font-size:13px; margin-bottom:2px;">Size</label>
+            <div class="pair__field">
+              <label>Size</label>
               <select>
                 <option>S</option>
                 <option>M</option>
                 <option>L</option>
               </select>
             </div>
-            <div>
-              <label style="font-size:13px; margin-bottom:2px;">Color</label>
+            <div class="pair__field">
+              <label>Color</label>
               <select>
-                <option selected>Red</option>
+                <option>Red</option>
                 <option>Blue</option>
                 <option>Green</option>
               </select>
@@ -322,16 +340,18 @@
           </div>
           <div class="pair">
             <span>#2</span>
-            <div>
+            <div class="pair__field">
+              <label>Size</label>
               <select>
                 <option>S</option>
                 <option>M</option>
                 <option>L</option>
               </select>
             </div>
-            <div>
+            <div class="pair__field">
+              <label>Color</label>
               <select>
-                <option selected>Red</option>
+                <option>Red</option>
                 <option>Blue</option>
                 <option>Green</option>
               </select>
@@ -339,16 +359,18 @@
           </div>
           <div class="pair">
             <span>#3</span>
-            <div>
+            <div class="pair__field">
+              <label>Size</label>
               <select>
                 <option>S</option>
                 <option>M</option>
                 <option>L</option>
               </select>
             </div>
-            <div>
+            <div class="pair__field">
+              <label>Color</label>
               <select>
-                <option selected>Red</option>
+                <option>Red</option>
                 <option>Blue</option>
                 <option>Green</option>
               </select>
@@ -359,54 +381,77 @@
     </div>
 
     <div class="shipping">Free 2 Day Shipping</div>
-    <div class="total">Total: DKK 360.00</div>
+    <div class="total">Total: DKK 195.00</div>
 
     <button class="add-to-cart">+ Add to Cart</button>
     <div class="footer-note">© Powered by Pumper</div>
   </div>
 
   <script>
-    const bundleOptions = document.querySelectorAll('.bundle-option');
-const radios = document.querySelectorAll('input[type="radio"][name="bundle"]');
-const totalPrice = document.querySelector('.total');
+    /*
+     * A developer's thought process for the JS:
+     * "Okay, let's get the main elements we'll be working with. I'll grab
+     * the container and all the options. I'll need a function to update
+     * the total price, and another one to handle the 'active' state of the cards."
+     */
+    document.addEventListener('DOMContentLoaded', () => {
+      const bundleContainer = document.querySelector('.bundle-container');
+      const bundleOptions = document.querySelectorAll('.bundle-option');
+      const totalPriceElement = document.querySelector('.total');
 
-// Set prices for each bundle (in order)
-const prices = [195, 345, 528];
+      // Helper function to update the price display.
+      const updateTotalPrice = (price) => {
+        totalPriceElement.textContent = `Total: DKK ${price.toFixed(2)}`;
+      };
 
-function updateTotal(index) {
-  totalPrice.textContent = `Total: DKK ${prices[index].toFixed(2)}`;
-}
+      // Helper function to handle the active card.
+      const setActiveBundle = (selectedOption) => {
+        // First, let's turn off the active state for all cards...
+        bundleOptions.forEach(option => {
+          option.classList.remove('active');
+        });
+        // ...then turn it on for the one we just clicked or hovered on.
+        selectedOption.classList.add('active');
+      };
 
-bundleOptions.forEach((option, index) => {
-  option.addEventListener('mouseenter', () => {
-    bundleOptions.forEach((opt, i) => {
-      if (i === index) {
-        opt.classList.add('active');
-        radios[i].checked = true;
-        updateTotal(index);
-      } else {
-        opt.classList.remove('active');
-        radios[i].checked = false;
+      // This is the core logic. Instead of adding a listener to every single card,
+      // we'll just listen to the main container. This is way more efficient,
+      // especially if we had 50 bundles instead of just 3.
+      bundleContainer.addEventListener('click', (event) => {
+        // `event.target.closest()` is a lifesaver. It finds the nearest ancestor
+        // that matches the selector, which is perfect for this situation.
+        const selectedOption = event.target.closest('.bundle-option');
+        if (!selectedOption) return; // If we click outside a card, just ignore it.
+
+        // Get the radio button inside the card and check it.
+        const radio = selectedOption.querySelector('input[type="radio"]');
+        if (radio) {
+          radio.checked = true;
+        }
+
+        // Grab the price from the `data-price` attribute and update the display.
+        const price = parseFloat(selectedOption.dataset.price);
+        updateTotalPrice(price);
+        setActiveBundle(selectedOption);
+      });
+      
+      // Let's also make it interactive on hover. It feels much nicer for the user.
+      bundleContainer.addEventListener('mouseenter', (event) => {
+        const selectedOption = event.target.closest('.bundle-option');
+        if (!selectedOption) return;
+        
+        const price = parseFloat(selectedOption.dataset.price);
+        updateTotalPrice(price);
+        setActiveBundle(selectedOption);
+      }, true); // The 'true' here makes sure this event runs first, which can prevent some weird behavior.
+
+      // Finally, set up the initial state when the page loads.
+      const initialActiveOption = document.querySelector('.bundle-option.active');
+      if (initialActiveOption) {
+        const initialPrice = parseFloat(initialActiveOption.dataset.price);
+        updateTotalPrice(initialPrice);
       }
     });
-  });
-});
-
-radios.forEach((radio, index) => {
-  radio.addEventListener('click', () => {
-    bundleOptions.forEach((option, i) => {
-      if (i === index) {
-        option.classList.add('active');
-        updateTotal(index);
-      } else {
-        option.classList.remove('active');
-      }
-    });
-  });
-});
-
-// Initialize total price on page load
-updateTotal(0);
   </script>
 </body>
 </html>
