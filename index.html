@@ -367,34 +367,46 @@
 
   <script>
     const bundleOptions = document.querySelectorAll('.bundle-option');
-    const radios = document.querySelectorAll('input[type="radio"][name="bundle"]');
+const radios = document.querySelectorAll('input[type="radio"][name="bundle"]');
+const totalPrice = document.querySelector('.total');
 
-    bundleOptions.forEach((option, index) => {
-      option.addEventListener('mouseenter', () => {
-        bundleOptions.forEach((opt, i) => {
-          if (i === index) {
-            opt.classList.add('active');
-            radios[i].checked = true;
-          } else {
-            opt.classList.remove('active');
-            radios[i].checked = false;
-          }
-        });
-      });
-    });
+// Set prices for each bundle (in order)
+const prices = [195, 345, 528];
 
-    // Optional: Keep click selection as fallback for accessibility
-    radios.forEach((radio, index) => {
-      radio.addEventListener('click', () => {
-        bundleOptions.forEach((option, i) => {
-          if (i === index) {
-            option.classList.add('active');
-          } else {
-            option.classList.remove('active');
-          }
-        });
-      });
+function updateTotal(index) {
+  totalPrice.textContent = `Total: DKK ${prices[index].toFixed(2)}`;
+}
+
+bundleOptions.forEach((option, index) => {
+  option.addEventListener('mouseenter', () => {
+    bundleOptions.forEach((opt, i) => {
+      if (i === index) {
+        opt.classList.add('active');
+        radios[i].checked = true;
+        updateTotal(index);
+      } else {
+        opt.classList.remove('active');
+        radios[i].checked = false;
+      }
     });
+  });
+});
+
+radios.forEach((radio, index) => {
+  radio.addEventListener('click', () => {
+    bundleOptions.forEach((option, i) => {
+      if (i === index) {
+        option.classList.add('active');
+        updateTotal(index);
+      } else {
+        option.classList.remove('active');
+      }
+    });
+  });
+});
+
+// Initialize total price on page load
+updateTotal(0);
   </script>
 </body>
 </html>
